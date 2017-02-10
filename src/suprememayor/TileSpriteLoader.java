@@ -15,6 +15,21 @@ import javax.imageio.ImageIO;
  * @author Julian
  */
 public class TileSpriteLoader {
+    /*
+    
+    Be wary editing any of the TileIDs, certain parts of the code may break.
+    This is very true in regards to checking whether a tile can be built upon,
+    the amount of variants of a certain tile, etc.
+    
+    Just be warned - if you change a value you probably will mess something up.
+    
+    The system is going to be changed A LOT as I slowly implement this game.
+    
+    It's in alpha. Things will be added. Things will be removed. Things will be changed.
+    
+    */ 
+    
+    
     private static final int NUM_TILE_SPRITES = 100; // Setting to 10 for now
     
     private static BufferedImage[] tileSprites;
@@ -32,7 +47,7 @@ public class TileSpriteLoader {
     
     // BUSINESSES
     public static final int TILE_SMALL_BUSINESS_1 = 20;
-    public static final int TILE_SMALL_BUSINESS_2 = 21;
+    public static final int TILE_SMALL_BUSINESS_2 = TILE_SMALL_BUSINESS_1 + 1;
     
     
     // HOMES
@@ -40,8 +55,13 @@ public class TileSpriteLoader {
     
     // UTILITY TILES
     public static final int TILE_ROAD_CROSS = 70;
-    public static final int TILE_ROAD_HORIZONTAL = 71;
-    public static final int TILE_ROAD_VERTICAL = 72;
+    public static final int TILE_ROAD_HORIZONTAL = TILE_ROAD_CROSS + 1;
+    public static final int TILE_ROAD_VERTICAL = TILE_ROAD_CROSS + 2;
+    public static final int TILE_ROAD_TL_TR = TILE_ROAD_CROSS + 3; // Top left, top right
+    public static final int TILE_ROAD_BL_BR = TILE_ROAD_CROSS + 4; // Bottom left, bottom right
+    public static final int TILE_ROAD_TL_BL = TILE_ROAD_CROSS + 5; // Top left, bottom left
+    public static final int TILE_ROAD_TR_BR = TILE_ROAD_CROSS + 6; // Top right, bottom right
+    
     
     // FLAG TILES
     public static final int TILE_FLAG_CONSTRUCTION = 90;
@@ -78,6 +98,10 @@ public class TileSpriteLoader {
         tileSprites[TILE_ROAD_CROSS] = ImageIO.read(getFile(PNG_TILE_ROAD_CROSS));
         tileSprites[TILE_ROAD_HORIZONTAL] = ImageIO.read(getFile(PNG_TILE_ROAD_HORIZONTAL));
         tileSprites[TILE_ROAD_VERTICAL] = ImageIO.read(getFile(PNG_TILE_ROAD_VERTICAL));
+        tileSprites[TILE_ROAD_TL_TR] = ImageIO.read(getFile(PNG_TILE_ROAD_TL_TR));
+        tileSprites[TILE_ROAD_BL_BR] = ImageIO.read(getFile(PNG_TILE_ROAD_BL_BR));
+        tileSprites[TILE_ROAD_TL_BL] = ImageIO.read(getFile(PNG_TILE_ROAD_TL_BL));
+        tileSprites[TILE_ROAD_TR_BR] = ImageIO.read(getFile(PNG_TILE_ROAD_TR_BR));
         
         // FLAG TILES
         tileSprites[TILE_FLAG_CONSTRUCTION] = ImageIO.read(getFile(PNG_TILE_FLAG_CONSTRUCTION));
@@ -116,6 +140,10 @@ public class TileSpriteLoader {
     private static final String PNG_TILE_ROAD_CROSS = "iso_16_road_cross.png";
     private static final String PNG_TILE_ROAD_HORIZONTAL = "iso_16_road_h.png";
     private static final String PNG_TILE_ROAD_VERTICAL = "iso_16_road_v.png";
+    private static final String PNG_TILE_ROAD_TL_TR = "iso_16_road_tl_tr.png";
+    private static final String PNG_TILE_ROAD_BL_BR = "iso_16_road_bl_br.png";
+    private static final String PNG_TILE_ROAD_TL_BL = "iso_16_road_tl_bl.png";
+    private static final String PNG_TILE_ROAD_TR_BR = "iso_16_road_tr_br.png";
     
     // FLAG TILES
     private static final String PNG_TILE_FLAG_CONSTRUCTION = "iso_16_construct_flag.png";

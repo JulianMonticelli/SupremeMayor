@@ -71,7 +71,7 @@ public class RightClickMenu {
     private void getFields() {
         //~~!> TODO: Fix this because it doesn't correct for selections
         
-        int tileID = WorldManager.getInstance().getTile(tileAffectedX, tileAffectedY).tileID;
+        int tileID = WorldManager.getInstance().getTile(tileAffectedX, tileAffectedY).getTileID();
         
         // Stopped here
         

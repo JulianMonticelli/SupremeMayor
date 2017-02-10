@@ -51,8 +51,11 @@ public class GamePanel extends JPanel {
     
     private boolean running;
     
+    // Managers
     WorldManager worldManager;
+    WarningManager warningManager;
     InfoBar infoBar;
+    
     
     private boolean movingLeft, movingRight, movingUp, movingDown;
     
@@ -76,8 +79,9 @@ public class GamePanel extends JPanel {
         firstTileSelectedOnDrag = new int[]{-1, -1};
         lastTileSelectedOnDrag = new int[]{-1, -1};
         
-        // Initialize the WorldManager and InfoBar
+        // Initialize Managers and GUI components
         worldManager = WorldManager.getInstance();
+        warningManager = WarningManager.getInstance();
         infoBar = InfoBar.getInstance();
         
         // Assign camera to middle of screen
@@ -581,6 +585,7 @@ public class GamePanel extends JPanel {
      */
     public void tick() {
         worldManager.update(); // Dispatch WorldManager updates
+        warningManager.update();
         infoBar.update();
         if (movingRight && !movingLeft) {
             xOffs -= moveAmount; // Moving CAMERA right is setting offset to LEFT
@@ -616,6 +621,9 @@ public class GamePanel extends JPanel {
         if(RightClickMenu.isMenuOpen()) {
             RightClickMenu.getInstance().draw(g, xOffs, yOffs);
         }
+        
+        // Draw warnings
+        warningManager.draw(g, xOffs, yOffs);
         
     }
     

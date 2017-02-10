@@ -32,20 +32,34 @@ public class WarningManager {
         return instance;
     }
     
+    // A simple queue to hold our warnings
     private SimpleQueue<Warning> warningQueue;
+    
     
     private WarningManager() {
         warningQueue = new SimpleQueue();
     }
     
+    /*******************************************************************
+     * Creates a warning via the "standard" warning implementation
+     * This should be cleaned up in the future
+     * @param warning String that will be displayed on-screen
+     */
     public void createWarning(String warning) {
         warningQueue.add(new Warning(warning, 60,  WARNING_FONT_DEFAULT, WARNING_X_POS, WARNING_Y_POS, Color.RED));
     }
     
+    /*******************************************************************
+     * Remove a specific warning from the WarningQueue
+     * @param warning The warning we want to remove
+     */
     public void remove(Warning warning) {
         warningQueue.remove(warning);
     }
     
+    /*******************************************************************
+     * Dispatches updates to all warnings in the queue
+     */
     public void update() {
         if(!warningQueue.isEmpty()) {
             Node curr = (Node)warningQueue.peek();
@@ -60,6 +74,12 @@ public class WarningManager {
         }
     }
     
+    /*******************************************************************
+     * Dispatches drawing to all warnings on-screen
+     * @param g Graphics context
+     * @param xOffs offset of x
+     * @param yOffs offset of y
+     */
     public void draw(Graphics g, int xOffs, int yOffs) {
         if(!warningQueue.isEmpty()) {
             Node curr = (Node)warningQueue.peek();

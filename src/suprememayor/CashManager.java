@@ -15,7 +15,7 @@ public class CashManager {
     private int currentCash;
     
     private CashManager() {
-        currentCash = 50000; // 50K to start?
+        currentCash = 500000; // 500K to start?
     }
     
     /*******************************************************************

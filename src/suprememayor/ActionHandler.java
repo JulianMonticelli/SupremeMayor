@@ -32,6 +32,7 @@ public class ActionHandler {
     private ActionHandler() {
         cashManager = CashManager.getInstance();
         worldManager = WorldManager.getInstance();
+        warningManager = WarningManager.getInstance();
     }
     
     /*******************************************************************
@@ -39,7 +40,7 @@ public class ActionHandler {
      */
     private void alertNotEnoughMoney() {
         System.err.println("Not enough money!");
-        //warningManager.createWarning("Not enough money!");
+        warningManager.createWarning("Not enough money!");
     }
     
     /*******************************************************************
@@ -48,7 +49,7 @@ public class ActionHandler {
      */
     private void alertUnderConstruction() {
         System.err.println("Already under construction!");
-        //warningManager.createWarning("Already under construction!");
+        warningManager.createWarning("Already under construction!");
     }
     
     /*******************************************************************
@@ -57,7 +58,7 @@ public class ActionHandler {
      */
     private void alertNoBuildableTiles() {
         System.err.println("No buildable tiles!");
-        //warningManager.createWarning("No buildable tiles!");
+        warningManager.createWarning("No buildable tiles!");
     }
     
     /*******************************************************************

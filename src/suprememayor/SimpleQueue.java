@@ -6,15 +6,10 @@
 
 package suprememayor;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Queue;
-import java.util.function.Consumer;
-
 /**
  * @author Julian
  */
-public class SimpleQueue<T> implements Queue {
+public class SimpleQueue<T> {
     int size;
     Node<T> head;
     Node<T> tail;
@@ -25,7 +20,11 @@ public class SimpleQueue<T> implements Queue {
         tail = null;
     }
 
-    @Override
+    /*******************************************************************
+     * Adds an object to the queue
+     * @param obj Object we are adding to the queue
+     * @return true :)
+     */
     public boolean add(Object obj) {
         if(head == null) {
             head = tail = new Node<>((T)obj);
@@ -36,15 +35,14 @@ public class SimpleQueue<T> implements Queue {
             tail = tail.next;
         }
         size++;
-        return true; // We should always return true, right? We're not limiting this queue... yet
+        return true; // I see no reason to return false
     }
 
-    @Override
-    public boolean offer(Object e) {
-        throw new UnsupportedOperationException("Not supported.");
-    }
-
-    @Override
+    
+    /*******************************************************************
+     * Remove an object from the queue
+     * @return the object we removed
+     */
     public Object remove() {
         if (head == null) {
             return null;
@@ -60,52 +58,36 @@ public class SimpleQueue<T> implements Queue {
         }
     }
 
-    @Override
-    public Object poll() {
-        throw new UnsupportedOperationException("Not supported.");
-    }
-
-    @Override
-    public Object element() {
-        throw new UnsupportedOperationException("Not supported.");
-    }
-
-    @Override
+    /*******************************************************************
+     * See what's at the start of the queue
+     * @return Object at the head of the queue
+     */
     public Object peek() {
         return head;
     }
 
-    @Override
+    /*******************************************************************
+     * Return the size of the queue
+     * @return Size of the queue
+     */
     public int size() {
         return size;
     }
 
-    @Override
+    /*******************************************************************
+     * Determines if the queue is empty
+     * @return true if the queue is empty, otherwise returns false
+     */
     public boolean isEmpty() {
         return size == 0;
     }
-
-    @Override
-    public boolean contains(Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Iterator iterator() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object[] toArray() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object[] toArray(Object[] a) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
+    
+    /*******************************************************************
+     * Removes an object from the queue
+     * @param o Object we are removing
+     * @return true if we have removed the object, false if the object
+     * is not in the queue
+     */
     public boolean remove(Object o) {
         if(o == null)
             return false;
@@ -118,7 +100,9 @@ public class SimpleQueue<T> implements Queue {
             if(curr == head) {
                 head = head.next;
             }
-            curr.prev.next = curr.next;
+            if(curr.prev != null) {
+                curr.prev.next = curr.next;
+            }
             if(curr.next != null) {
                 curr.next.prev = curr.next;
             }
@@ -131,34 +115,8 @@ public class SimpleQueue<T> implements Queue {
         return false; // We haven't found it
     }
 
-    @Override
-    public boolean containsAll(Collection c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean addAll(Collection c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean removeAll(Collection c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean retainAll(Collection c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public void clear() {
         head = tail = null;
-    }
-
-    @Override
-    public void forEach(Consumer action) {
-        Queue.super.forEach(action); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

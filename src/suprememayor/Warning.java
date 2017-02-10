@@ -19,21 +19,23 @@ public class Warning {
     String message;
     Font font;
     Color color;
-    int absX;
-    int absY;
+    int xPos;
+    int yPos;
     
     public Warning(String message, int limit, Font font, int absX, int absY, Color color) {
         this.ticksSinceDispatch = 0;
         this.ticksTillKilled = limit;
         this.message = message;
-        this.absX = absX;
-        this.absY = absY;
+        this.xPos = absX;
+        this.yPos = absY;
         this.font = font;
         this.color = color;
     }
     
     public void update() {
         ticksSinceDispatch++;
+        color = new Color(color.getRed(), color.getBlue(), color.getGreen(), color.getAlpha() - (255/ticksTillKilled));
+        yPos -= 1;
         if (ticksSinceDispatch == ticksTillKilled) {
             WarningManager.getInstance().remove(this);
         }
@@ -44,6 +46,6 @@ public class Warning {
         //
         g.setFont(font);
         g.setColor(color);
-        g.drawString(message, absX, absY);
+        g.drawString(message, xPos, yPos);
     }
 }

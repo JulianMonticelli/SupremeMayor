@@ -15,19 +15,20 @@ class Tile {
     
     public static final int TILE_WIDTH = 32;
     public static final int TILE_HEIGHT = 16;
-    
+    private static WorldManager worldManager = WorldManager.getInstance();
     
     // Instance variables
-    int tileID;
-    boolean underConstruction;
-    int ticksUntilConstruction;
-    int tileIDToConstruct;
-    boolean highlightRed;
-    boolean highlightGreen;
-    boolean highlightWhite;
-    boolean highlightBlueWhite;
-    boolean generatingMoney;
-    
+    private int tileID;
+    private boolean underConstruction;
+    private int ticksUntilConstruction;
+    private int tileIDToConstruct;
+    private boolean highlightRed;
+    private boolean highlightGreen;
+    private boolean highlightWhite;
+    private boolean highlightBlueWhite;
+    private boolean generatingMoney;
+    private int tileX; // Used for external reference 
+    private int tileY; // Used for external reference
     
     public Tile() {
         tileID = TileSpriteLoader.TILE_GRASS_1;
@@ -37,6 +38,20 @@ class Tile {
         highlightBlueWhite = false;
         underConstruction = false;
         generatingMoney = false;
+    }
+
+    public int getTileID() {
+        return tileID;
+    }
+
+    public void setTileID(int tileID) {
+        this.tileID = tileID;
+    }
+    
+    public Tile(int tileID, int x, int y) {
+        this.tileX = x;
+        this.tileY = y;
+        this.tileID = tileID;
     }
     
     public void setConstructionTo(int tileID) {
@@ -59,10 +74,6 @@ class Tile {
         setConstructionTo(constructionID, constructionID + modifier);
     } 
     
-    public Tile(int tileID) {
-        super();
-        this.tileID = tileID;
-    }
     
     public void update() {
         if(underConstruction) {
@@ -87,6 +98,9 @@ class Tile {
     private void finishConstruction() {
         underConstruction = false;
         tileID = tileIDToConstruct;
+        if(tileIDToConstruct == Construction.ROAD_H || tileIDToConstruct == Construction.ROAD_V) {
+            worldManager.performRoadJunctionCheck(tileX, tileY, tileID);
+        }
         tileIDToConstruct = 0;
         if(TileIncome.generatesMoney(tileID))
             generatingMoney = true;
@@ -113,6 +127,7 @@ class Tile {
     }
     
     public void unhighlightRed() {
+        // May run into problems if we don't check for other highlightings... but for now...w
         highlightRed = false;
     }
     
