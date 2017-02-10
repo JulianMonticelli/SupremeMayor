@@ -15,33 +15,57 @@ public class ActionHandler {
     private WorldManager worldManager;
     private static ActionHandler instance;
     
+    /*******************************************************************
+     * Returns singleton instance of the ActionHandler
+     * @return ActionHandler singleton
+     */
     public static ActionHandler getInstance() {
         if(instance == null)
             instance = new ActionHandler();
         return instance;
     }
     
+    /*******************************************************************
+     * Constructor to ActionHandler, only responsible for gathering
+     * local references to CashManager and WorldManager
+     */
     private ActionHandler() {
         cashManager = CashManager.getInstance();
         worldManager = WorldManager.getInstance();
     }
     
-    
+    /*******************************************************************
+     * Alerts the user that there is not enough money.
+     */
     private void alertNotEnoughMoney() {
         System.err.println("Not enough money!");
         //warningManager.createWarning("Not enough money!");
     }
     
+    /*******************************************************************
+     * Alerts the user that nothing can be done because every possible
+     * tile considered is under construction.
+     */
     private void alertUnderConstruction() {
         System.err.println("Already under construction!");
         //warningManager.createWarning("Already under construction!");
     }
     
+    /*******************************************************************
+     * Alerts the user that nothing can be done because every possible
+     * tile cannot be built upon.
+     */
     private void alertNoBuildableTiles() {
         System.err.println("No buildable tiles!");
         //warningManager.createWarning("No buildable tiles!");
     }
     
+    /*******************************************************************
+     * Construct small business on a given tile or a selection, if there
+     * is one available.
+     * @param tileAffectedX Tile(X) RightClickMenu was spawned from
+     * @param tileAffectedY Tile(Y) RightClickMenu was spawned from
+     */
     public void constructSmallBusiness(int tileAffectedX, int tileAffectedY) {
         if(worldManager.isSelected()) {
             int numBuildable = worldManager.getNumBuildableTilesInSelection();
@@ -68,6 +92,13 @@ public class ActionHandler {
             cashManager.removeCash(Construction.getConstructionCost(Construction.SMALL_BUSINESS));
         }
     }
+    
+    /*******************************************************************
+     * Construct small home on a given tile or a selection, if there
+     * is one available.
+     * @param tileAffectedX Tile(X) RightClickMenu was spawned from
+     * @param tileAffectedY Tile(Y) RightClickMenu was spawned from
+     */
     public void constructSmallHome(int tileAffectedX, int tileAffectedY) {
         if(worldManager.isSelected()) {
             int numBuildable = worldManager.getNumBuildableTilesInSelection();
@@ -95,6 +126,12 @@ public class ActionHandler {
         }
     }
     
+    /*******************************************************************
+     * Construct road on a given tile or a selection, if there is one
+     * available.
+     * @param tileAffectedX Tile(X) RightClickMenu was spawned from
+     * @param tileAffectedY Tile(Y) RightClickMenu was spawned from
+     */
     public void constructRoad(int tileAffectedX, int tileAffectedY) {
         if(worldManager.isSelected()) {
             int[] ss = worldManager.getSelectionSize();

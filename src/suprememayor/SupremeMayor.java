@@ -17,26 +17,38 @@ import javax.swing.JFrame;
 public class SupremeMayor extends JFrame {
     
     public static final String GAME_TITLE = "Supreme Mayor";
+    public static final String VERSION = "0.02 Alpha";
+    
     public static Random rand;
+    
     public GamePanel gp;
     
-    
-    public SupremeMayor() {
-        rand = new Random();
+    private void init() {
+        // Load tiles into RAM
         try {
-            TileSpriteLoader.initTiles(); // Load tiles into RAM
+            TileSpriteLoader.initTiles();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
+        // Initializations of static classes
         Actions.initActions();
         Construction.init();
         TileIncome.initTileIncome();
+        
+        // Init RNG
+        rand = new Random();
+    }
+    
+    public SupremeMayor() {
+        // Initialize everything that is not related to the JFrame
+        init();
         
         // GamePanel init
         gp = new GamePanel();
         
         // JFrame operations
-        setTitle(GAME_TITLE);
+        setTitle(GAME_TITLE + " v" + VERSION);
         setResizable(true);
         setLayout(new BorderLayout());
         add(gp);
@@ -45,14 +57,14 @@ public class SupremeMayor extends JFrame {
         setVisible(true);
     }
     
-    private void init() {
+    private void start() {
         gp.run();
     }
     
     public static void main(String[] args) {
         SupremeMayor game = new SupremeMayor();
         
-        game.init();
+        game.start();
     }
     
 }

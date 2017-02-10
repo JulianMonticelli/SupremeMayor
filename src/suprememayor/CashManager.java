@@ -18,20 +18,36 @@ public class CashManager {
         currentCash = 50000; // 50K to start?
     }
     
+    /*******************************************************************
+     * Gets singleton instance of the CashManager
+     * @return CashManager singleton
+     */
     public static CashManager getInstance() {
         if(instance == null) 
             instance = new CashManager();
         return instance;
     }
     
+    /*******************************************************************
+     * Removes the given amount of cash from the user CashManager
+     * @param cashAmount the amount of cash to be removed
+     */
     public void removeCash(int cashAmount) {
         currentCash -= cashAmount;
     }
     
+    /*******************************************************************
+     * Adds the given amount of cash to the user CashManager
+     * @param cashAmount the amount of cash to be added
+     */
     public void addCash(int cashAmount) {
         currentCash += cashAmount;
     }
 
+    /*******************************************************************
+     * Returns the amount of cash that the user has.
+     * @return current cash amount of the user
+     */
     public int getCash() {
         return currentCash;
     }

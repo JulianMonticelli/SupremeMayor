@@ -22,6 +22,9 @@ public class Actions {
     private static int[][] tileActions;
     private static String[] tileStrings;
     
+    /*******************************************************************
+     * Initializes Action strings
+     */
     private static void initActionStrings() {
         tileStrings[TEST_FUNCTION] = "TEST FUNCTION";
         tileStrings[DEMOLISH] = "Demolish";
@@ -31,10 +34,18 @@ public class Actions {
         tileStrings[CONSTRUCT_ROAD] = "Construct Road";
     }
     
+    /*******************************************************************
+     * Return what actions are available for a given tile.
+     * @param tileID
+     * @return 
+     */
     public static int[] getTileActions(int tileID) {
         return tileActions[tileID];
     }
     
+    /*******************************************************************
+     * Initializes Actions and all Action-related variables.
+     */
     public static void initActions() {
         tileActions = new int[NUM_ACTIONS][];
         tileStrings = new String[NUM_ACTIONS];
@@ -57,6 +68,12 @@ public class Actions {
         tileActions[TileSpriteLoader.TILE_SMALL_HOME_1] = demolishable;
     }
     
+    /*******************************************************************
+     * Returns String[] of Action titles from a given int[] of action
+     * indices
+     * @param actions Array of action indexes
+     * @return String[] of Action titles
+     */
     public static String[] getMenuTitles(int[] actions) {
         String[] returnS = new String[actions.length];
         for (int i = 0; i < actions.length; i++) {
@@ -65,6 +82,11 @@ public class Actions {
         return returnS;
     }
     
+    /*******************************************************************
+     * Gets the title of a specific action via an action index
+     * @param action integer index of a specific action
+     * @return action title String
+     */
     public static String getActionTitle(int action) {
         return tileStrings[action];
     }

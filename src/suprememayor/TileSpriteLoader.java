@@ -89,7 +89,11 @@ public class TileSpriteLoader {
         tileSprites[TILE_HIGHLIGHT_RED] = ImageIO.read(getFile(PNG_TILE_HIGHLIGHT_RED));
         
     }
-    
+    /*******************************************************************
+     * Returns BufferedImage (sprite) of given Tile via tileIndex
+     * @param tileIndex index of a given Tile
+     * @return BufferedImage sprite 
+     */
     public static BufferedImage getTileSprite(int tileIndex) {
         return tileSprites[tileIndex];
     }
@@ -126,7 +130,15 @@ public class TileSpriteLoader {
         File file = new File(resPath + fileName);
         return file;
     }
-
+    
+    /*******************************************************************
+     * Get the selected tile adjustment based on the tile mask image.
+     * @param maskingImageX X coordinate distance from top-left pixel of
+     * masking image.
+     * @param maskingImageY Y coordinate distance from top-left pixel of
+     * masking image.
+     * @return Adjustment of selected tile
+     */
     static int[] getMaskAdjustment(int maskingImageX, int maskingImageY) {
         int[] maskAdj = {0, 0};
         // Get pixel at maskingImage offset

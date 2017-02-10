@@ -57,13 +57,31 @@ public class Construction {
         
     }
     
-    public static int getConstructionTime(int tileID) {
-        return constructionTime[tileID];
+    
+    /*******************************************************************
+     * Get the amount of time it takes to build a constructable
+     * @param constructionID index of constructable 
+     * @return time it takes to construct given constructable
+     */
+    public static int getConstructionTime(int constructionID) {
+        return constructionTime[constructionID];
     }
-    public static int getConstructionCost(int tileID) {
-        return constructionCost[tileID];
+    
+    /*******************************************************************
+     * Get the amount of cash it takes to build a constructable
+     * @param constructionID index of constructable 
+     * @return cash it takes to construct given constructable
+     */
+    public static int getConstructionCost(int constructionID) {
+        return constructionCost[constructionID];
     }
-    public static int getConstructionVariants(int tileID) {
-        return constructionVariants[tileID];
+    
+    /*******************************************************************
+     * Get the amount of variables constructable has
+     * @param constructionID index of constructable 
+     * @return variables constructable has
+     */
+    public static int getConstructionVariants(int constructionID) {
+        return constructionVariants[constructionID];
     }
 }

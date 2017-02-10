@@ -27,11 +27,14 @@ import static suprememayor.WorldManager.WORLD_PIXEL_HEIGHT_MIDDLE;
 /**
  * @author Julian
  */
+
+
 public class GamePanel extends JPanel {
     public static int WIDTH = 1440;
     public static int HEIGHT = 900;
     
-    public static final Color sky = Color.decode("#BBFFFF");
+    // In memory of Walter White (9/7/1959 - 9/7/2011)
+    public static final Color blueSky = Color.decode("#BBFFFF");
     
     private static final int[] INVALID_TILE = {-1,-1};
     
@@ -41,13 +44,14 @@ public class GamePanel extends JPanel {
     
     
     // State vars
-    private int lastTileHoveredX;
-    private int lastTileHoveredY;
+    private int[] lastTileHovered;
     private int[] firstTileSelectedOnDrag;
     private int[] lastTileSelectedOnDrag;
     private boolean[] mousePressedDown;
     
-    WorldManager world;
+    private boolean running;
+    
+    WorldManager worldManager;
     InfoBar infoBar;
     
     private boolean movingLeft, movingRight, movingUp, movingDown;
@@ -56,23 +60,31 @@ public class GamePanel extends JPanel {
     int yOffs = 0;
     
     public GamePanel() {
+        // Assign GamePanel singleton
         SINGLETON = this;
         
+        // Set running to true
+        running = true;
+        
+        // Array for what mouse button was pressed down
         mousePressedDown = new boolean[4];
         
-        lastTileHoveredX = lastTileHoveredY = -1;
+        // Last tile that was hovered over
+        lastTileHovered = new int[] {-1, -1};
         
+        // Selection drags variables (beginning and end)
         firstTileSelectedOnDrag = new int[]{-1, -1};
         lastTileSelectedOnDrag = new int[]{-1, -1};
         
-        world = WorldManager.getInstance();
+        // Initialize the WorldManager and InfoBar
+        worldManager = WorldManager.getInstance();
         infoBar = InfoBar.getInstance();
         
         // Assign camera to middle of screen
         xOffs = -WORLD_PIXEL_WIDTH_MIDDLE + (WIDTH/2);
         yOffs = -WORLD_PIXEL_HEIGHT_MIDDLE + (HEIGHT/2);
         
-        
+        // Assign JPanel variables
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         this.setFocusable(true);
         this.setVisible(true);
@@ -161,15 +173,15 @@ public class GamePanel extends JPanel {
 
                     // Handle highlight
                     if(tileX != -1) { // If our X tile is EVER -1, it means it's a completely invalid tile
-                        if (lastTileHoveredX != -1) {
-                            world.unhighlightWhite(lastTileHoveredX, lastTileHoveredY);
+                        if (lastTileHovered[0] != -1) {
+                            worldManager.unhighlightWhite(lastTileHovered[0], lastTileHovered[1]);
                         }
-                        world.highlightWhite(tileX, tileY);
-                        lastTileHoveredX = tileX;
-                        lastTileHoveredY = tileY;
+                        worldManager.highlightWhite(tileX, tileY);
+                        lastTileHovered[0] = tileX;
+                        lastTileHovered[1] = tileY;
                     } else {
-                        if (lastTileHoveredX != -1) {
-                            world.unhighlightWhite(lastTileHoveredX, lastTileHoveredY);
+                        if (lastTileHovered[0] != -1) {
+                            worldManager.unhighlightWhite(lastTileHovered[0], lastTileHovered[1]);
                         }
                     }
                 }
@@ -229,12 +241,20 @@ public class GamePanel extends JPanel {
         
     }
     
+    /******************************************************************
+     * Returns whether or not the panel has a selected 
+     * @return true if the panel has a selection, false if it does not.
+     */
     public boolean isSelected() {
         boolean isSelected = firstTileSelectedOnDrag[0] > -1;
         System.out.println("isSelected() : " + isSelected);
         return isSelected;
     }
     
+    /*******************************************************************
+     * Highlights the selection on each tick of the MouseDragged 
+     * operation.
+     */
     private void highlightSelection() {
         int tlx;
         int tly;
@@ -263,11 +283,16 @@ public class GamePanel extends JPanel {
         
         for (int i = tlx; i <= brx; i++) {
             for (int j = tly; j <= bry; j++) {
-                world.highlightBlueWhite(i, j);
+                worldManager.highlightBlueWhite(i, j);
             }
         }
     }
     
+    /*******************************************************************
+     * Sets the construction of whatever tiles are selected to the given
+     * construction ID.
+     * @param constructionID The construction ID that we are constructing.
+     */
     public void setSelectionConstructionTo(int constructionID) {
         int tlx;
         int tly;
@@ -296,12 +321,16 @@ public class GamePanel extends JPanel {
         
         for (int i = tlx; i <= brx; i++) {
             for (int j = tly; j <= bry; j++) {
-                if(world.getTile(i, j).isBuildable())
-                    world.getTile(i, j).setConstructionTo(constructionID);
+                if(worldManager.getTile(i, j).isBuildable())
+                    worldManager.getTile(i, j).setConstructionTo(constructionID);
             }
         }
     }
     
+    /*******************************************************************
+     * Gets the selection size in width and height dimensions.
+     * @return integer array selection size {x, y}
+     */
     public int[] getSelectionSize() {
         int[] ret = new int[2];
         ret[0] = Math.abs(firstTileSelectedOnDrag[0]-lastTileSelectedOnDrag[0]) + 1;
@@ -309,6 +338,10 @@ public class GamePanel extends JPanel {
         return ret;
     }
     
+    /*******************************************************************
+     * Gets the number of tiles in the selection.
+     * @return Number of tiles in selection
+     */
     public int getNumTilesInSelection() {
         int tlx;
         int tly;
@@ -337,12 +370,16 @@ public class GamePanel extends JPanel {
         int count = 0;
         for (int i = tlx; i <= brx; i++) {
             for (int j = tly; j <= bry; j++) {
-                count++;
+                count++; // May not be the most efficient method...
             }
         }
         return count;
     }
     
+    /*******************************************************************
+     * Gets the number of tiles on which the user can build.
+     * @return number of tiles which are buildable
+     */
     public int getNumBuildableTilesInSelection() {
         int tlx;
         int tly;
@@ -371,13 +408,17 @@ public class GamePanel extends JPanel {
         int count = 0;
         for (int i = tlx; i <= brx; i++) {
             for (int j = tly; j <= bry; j++) {
-                if(world.getTile(i, j).isBuildable())
+                if(worldManager.getTile(i, j).isBuildable())
                     count++;
             }
         }
         return count;
     }
     
+    /*******************************************************************
+     * Uses the setConstructionToRandom() method on each tile.
+     * @param constructionID Construction ID that we are applying to each tile
+     */
     public void setSelectionConstructionToRandom(int constructionID) {
         int tlx;
         int tly;
@@ -406,18 +447,25 @@ public class GamePanel extends JPanel {
         
         for (int i = tlx; i <= brx; i++) {
             for (int j = tly; j <= bry; j++) {
-                if(world.getTile(i, j).isBuildable())
-                    world.getTile(i, j).setConstructionToRandom(constructionID);
+                if(worldManager.getTile(i, j).isBuildable())
+                    worldManager.getTile(i, j).setConstructionToRandom(constructionID);
             }
         }
     }
     
+    /*******************************************************************
+     * Clears the selection so that no tiles are highlighted and both 
+     * relevant arrays are set to sentinel values.
+     */
     private void clearSelection() {
         unhighlightSelection();
         firstTileSelectedOnDrag = new int[]{-1, -1};
         lastTileSelectedOnDrag = new int[]{-1, -1};
     }
     
+    /*******************************************************************
+     * Unhighlights all tiles in selection.
+     */
     private void unhighlightSelection() {
         int tlx;
         int tly;
@@ -446,11 +494,18 @@ public class GamePanel extends JPanel {
         
         for (int i = tlx; i <= brx; i++) {
             for (int j = tly; j <= bry; j++) {
-                world.unhighlightBlueWhite(i, j);
+                worldManager.unhighlightBlueWhite(i, j);
             }
         }
         
     }
+    
+    /*******************************************************************
+     * Determines the tile at a given point.
+     * @param absoluteX Screen xPos - xOffs
+     * @param absoluteY Screen yPos - yOffs
+     * @return int[x,y] Which tile the given pixel is at
+     */
     private int[] determineTileAt(int absoluteX, int absoluteY) {
         int[] tileAt = new int[2];
         
@@ -496,27 +551,36 @@ public class GamePanel extends JPanel {
         return tileAt;
     }
     
-    
+    /*******************************************************************
+     * Main game loop.
+     */
     public void run() { 
         int ticksPerSecond = 30; // 30FPS
-        while(true) { // while true lolz
+        
+        while(running) {
             long beginTime = System.currentTimeMillis();
-            tick();
+            
+            tick(); // All game logic renders via this method
             repaint(); // Calls paintComponent()
+            
             long endTime = System.currentTimeMillis();
+            
             if((endTime - beginTime) < (1000/ticksPerSecond)) {
                 try {
                     Thread.sleep(1000/ticksPerSecond - (endTime-beginTime)); // Correct game loop
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    e.printStackTrace(); // This /should not/ happen.
                 }
             }
         }
     }
     
-    
+    /*******************************************************************
+     * All game logic that doesn't involve drawing to the screen and 
+     * user input thread logic.
+     */
     public void tick() {
-        world.update();
+        worldManager.update(); // Dispatch WorldManager updates
         infoBar.update();
         if (movingRight && !movingLeft) {
             xOffs -= moveAmount; // Moving CAMERA right is setting offset to LEFT
@@ -530,28 +594,51 @@ public class GamePanel extends JPanel {
         }
     }
     
+    /*******************************************************************
+     * Paints the component, as called for by this.repaint();
+     * @param g Graphics component
+     */
     @Override
     public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.setColor(sky);
+        super.paintComponent(g); // Need this call for method to work correctly
+        
+        // Draw "skybox" i.e., a baby blue rectangle
+        g.setColor(blueSky);
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
         
-        world.draw(g, xOffs, yOffs);
+        // Draw the world, handing to it the Graphics g, and offsets
+        worldManager.draw(g, xOffs, yOffs);
         
+        // Draw the infobar to the current graphics object
         infoBar.draw(g);
         
-        if(RightClickMenu.getInstance() != null) {
+        // If the RightClickMenu is open, draw to screen
+        if(RightClickMenu.isMenuOpen()) {
             RightClickMenu.getInstance().draw(g, xOffs, yOffs);
         }
         
     }
     
+    /*******************************************************************
+     * Get the width of the GamePanel JPanel
+     * @return width in pixels
+     */
     public static int getSizeX() {
         return SINGLETON.getWidth();
     }
+    
+    /*******************************************************************
+     * Get the height of the GamePanel JPanel
+     * @return height in pixels
+     */
     public static int getSizeY() {
         return SINGLETON.getHeight();
     }
+    
+    /*******************************************************************
+     * Get the singleton instance of the GamePanel
+     * @return GamePanel SINGLETON
+     */
     public static GamePanel getInstance() {
         return SINGLETON;
     }
