@@ -39,8 +39,7 @@ public class ActionHandler {
      * Alerts the user that there is not enough money.
      */
     private void alertNotEnoughMoney() {
-        System.err.println("Not enough money!");
-        warningManager.createWarning("Not enough money!");
+        warningManager.createWarning("Not enough money!", Warning.TYPE_WARNING);
     }
     
     /*******************************************************************
@@ -48,8 +47,7 @@ public class ActionHandler {
      * tile considered is under construction.
      */
     private void alertUnderConstruction() {
-        System.err.println("Already under construction!");
-        warningManager.createWarning("Already under construction!");
+        warningManager.createWarning("Already under construction!", Warning.TYPE_WARNING);
     }
     
     /*******************************************************************
@@ -57,8 +55,7 @@ public class ActionHandler {
      * tile cannot be built upon.
      */
     private void alertNoBuildableTiles() {
-        System.err.println("No buildable tiles!");
-        warningManager.createWarning("No buildable tiles!");
+        warningManager.createWarning("No buildable tiles!", Warning.TYPE_WARNING);
     }
     
     /*******************************************************************

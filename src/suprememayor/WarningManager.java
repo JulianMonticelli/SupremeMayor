@@ -45,8 +45,12 @@ public class WarningManager {
      * This should be cleaned up in the future
      * @param warning String that will be displayed on-screen
      */
-    public void createWarning(String warning) {
-        warningQueue.add(new Warning(warning, 60,  WARNING_FONT_DEFAULT, WARNING_X_POS, WARNING_Y_POS, Color.RED));
+    public void createWarning(String warning, int warningType) {
+        if(warningType == Warning.TYPE_WARNING) {
+            warningQueue.add(new Warning(warning, 60,  WARNING_FONT_DEFAULT, WARNING_X_POS, WARNING_Y_POS, Color.RED));
+        } else if (warningType == Warning.TYPE_POSITIVE) {
+            warningQueue.add(new Warning(warning, 90,  WARNING_FONT_DEFAULT, WARNING_X_POS, WARNING_Y_POS, Color.GREEN));
+        }
     }
     
     /*******************************************************************

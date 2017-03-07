@@ -53,7 +53,7 @@ class WorldManager {
         
         for(int col = 0; col < tiles.length; col++) {
             for(int row = 0; row < tiles[col].length; row++) {
-                tiles[col][row] = new Tile(TileSpriteLoader.TILE_GRASS_2, col, row);
+                tiles[col][row] = new Tile(TileLoader.Tile.GRASS_2.getValue(), col, row);
             }
         }
         
@@ -309,26 +309,29 @@ class WorldManager {
         // Check for roads tiles
         if(tileX > 0) { // check "left" tile
             leftRoad = getTile(tileX-1, tileY).getTileID();
-            if( !(leftRoad >= TileSpriteLoader.TILE_ROAD_CROSS && leftRoad <= TileSpriteLoader.TILE_ROAD_TR_BR) ) { // if not a road tile
-                leftRoad = 0;
+            if( getTile(tileX-1, tileY).isRoadTile() ) { // if not a road tile
+                leftRoad = getTile(tileX-1, tileY).getTileID();
+                System.out.println("ROAD DETECTED L");
             }
         }
         if(tileX < WORLD_WIDTH-1) { // check "right" tile
             rightRoad = getTile(tileX+1, tileY).getTileID();
-            if( !(rightRoad >= TileSpriteLoader.TILE_ROAD_CROSS && rightRoad <= TileSpriteLoader.TILE_ROAD_TR_BR) ) { // if not a road tile
-                rightRoad = 0;
+            if( getTile(tileX+1, tileY).isRoadTile() ) { // if not a road tile
+                rightRoad = getTile(tileX+1, tileY).getTileID();
+                System.out.println("ROAD DETECTED R");
             }
         }
         if(tileY > 0) { // check "up" tile
             upRoad = getTile(tileX, tileY-1).getTileID();
-            if( !(upRoad >= TileSpriteLoader.TILE_ROAD_CROSS && upRoad <= TileSpriteLoader.TILE_ROAD_TR_BR) ) { // if not a road tile
-                upRoad = 0;
+            if( getTile(tileX, tileY-1).isRoadTile() ) { // if not a road tile
+                upRoad = getTile(tileX, tileY-1).getTileID();
+                System.out.println("ROAD DETECTED U");
             }
         }
         if(tileY < WORLD_HEIGHT-1) { // check "down" tile
-            downRoad = getTile(tileX, tileY+1).getTileID();
-            if( !(downRoad >= TileSpriteLoader.TILE_ROAD_CROSS && downRoad <= TileSpriteLoader.TILE_ROAD_TR_BR) ) { // if not a road tile
-                downRoad = 0;
+            if(getTile(tileX, tileY+1).isRoadTile() ) { // if not a road tile
+                downRoad = getTile(tileX, tileY+1).getTileID();
+                System.out.println("ROAD DETECTED D");
             }
         }
         
@@ -337,10 +340,18 @@ class WorldManager {
         
         // If all surrounding tiles are a road...
         if(leftRoad > 0 && rightRoad > 0 &&  upRoad > 0 && downRoad > 0) {
-            getTile(tileX, tileY).setTileID(TileSpriteLoader.TILE_ROAD_CROSS);
+            System.out.println("DETECTED CROSS");
+            getTile(tileX, tileY).setTileID(TileLoader.Tile.ROAD_CROSS.getValue());
         }
         
         
     }
+    
+    /*******************************************************************
+     * Returns whether or not a given tile is a road tile
+     * @param tileID index of Tile
+     * @return true if road tile, otherwise false
+     */
+    
 
 }

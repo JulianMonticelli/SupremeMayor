@@ -16,10 +16,10 @@ public class TileIncome {
         
         tileIncome = new int[100];
         
-        tileIncome[TileSpriteLoader.TILE_SMALL_BUSINESS_1] = 90;
-        tileIncome[TileSpriteLoader.TILE_SMALL_BUSINESS_2] = 100;
+        tileIncome[TileLoader.Tile.SMALL_BUSINESS_1.getValue()] = 90;
+        tileIncome[TileLoader.Tile.SMALL_BUSINESS_2.getValue()] = 100;
         
-        tileIncome[TileSpriteLoader.TILE_SMALL_HOME_1] = 25;
+        tileIncome[TileLoader.Tile.SMALL_HOME_1.getValue()] = 25;
         
     }
     

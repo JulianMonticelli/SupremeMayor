@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -30,6 +31,12 @@ import static suprememayor.WorldManager.WORLD_PIXEL_HEIGHT_MIDDLE;
 
 
 public class GamePanel extends JPanel {
+    // Fullscreen or not, initially?
+    private static boolean fullscreenOnStart = true;
+    
+    // Fullscreen...
+    Dimension fullscreenDimension = Toolkit.getDefaultToolkit().getScreenSize();
+    // Non-fullscreen standard Width & Height (this is for me mostly)
     public static int WIDTH = 1440;
     public static int HEIGHT = 900;
     
@@ -89,7 +96,10 @@ public class GamePanel extends JPanel {
         yOffs = -WORLD_PIXEL_HEIGHT_MIDDLE + (HEIGHT/2);
         
         // Assign JPanel variables
-        this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        if (fullscreenOnStart)
+            this.setPreferredSize(fullscreenDimension);
+        else 
+            this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         this.setFocusable(true);
         this.setVisible(true);
         
@@ -542,7 +552,7 @@ public class GamePanel extends JPanel {
         }
         
         // Actually call for mask adjustment
-        int[] maskCorrection = TileSpriteLoader.getMaskAdjustment(maskingImageX, maskingImageY);
+        int[] maskCorrection = TileLoader.getMaskAdjustment(maskingImageX, maskingImageY);
         // Apply mask adjustment        
         tileAt[0] += maskCorrection[0];
         tileAt[1] += maskCorrection[1];

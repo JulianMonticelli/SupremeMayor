@@ -24,11 +24,11 @@ public class RightClickMenu {
     private static RightClickMenu SINGLETON;
     
     // Size variables
-    private static int vertical_pad = 7; // Padding at top and bottom of RCM
-    private static int total_vertical_padding = 2 * vertical_pad; // Total vertical_padding
-    private static int rounding_radius = 10; // Rounding radius of corners on RCM
-    private static int string_draw_offs_x = 5; // X Offset of String in RCM
-    private static int string_draw_offs_y = 23; // Y Offset of String in RCM Field
+    private static final int VERTICAL_PAD = 7; // Padding at top and bottom of RCM
+    private static final int TOTAL_VERTICAL_PADDING = 2 * VERTICAL_PAD; // Total VERTICAL_PADding
+    private static final int ROUNDING_RADIUS = 10; // Rounding radius of corners on RCM
+    private static final int STRING_DRAW_OFFS_X = 5; // X Offset of String in RCM
+    private static final int STRING_DRAW_OFFS_Y = 23; // Y Offset of String in RCM Field
     
     private int fieldHeight;
     private int fieldWidth;
@@ -62,7 +62,7 @@ public class RightClickMenu {
         
         this.width = fieldWidth = GamePanel.getSizeX()/8; // Width double variable may be unneccessary but we're going to clean this up later - ran into some issues changing this
         fieldHeight = GamePanel.getSizeY()/40;
-        this.height = fieldHeight * numFields + total_vertical_padding;
+        this.height = fieldHeight * numFields + TOTAL_VERTICAL_PADDING;
     }
     
     /*******************************************************************
@@ -97,9 +97,9 @@ public class RightClickMenu {
      */
     public void draw(Graphics g, int xOffs, int yOffs) {
         g.setColor(MENU_COLOR);
-        g.fillRoundRect(drawX+xOffs, drawY+yOffs, width, height, rounding_radius, rounding_radius);
+        g.fillRoundRect(drawX+xOffs, drawY+yOffs, width, height, ROUNDING_RADIUS, ROUNDING_RADIUS);
         g.setColor(MENU_COLOR_BORDER);
-        g.drawRoundRect(drawX+xOffs, drawY+yOffs, width, height, rounding_radius, rounding_radius);
+        g.drawRoundRect(drawX+xOffs, drawY+yOffs, width, height, ROUNDING_RADIUS, ROUNDING_RADIUS);
         g.setFont(MENU_FONT);
         for (int i = 0; i < fields.length; i++) {
             fields[i].draw(g, xOffs, yOffs);
@@ -141,7 +141,7 @@ public class RightClickMenu {
      * @param absoluteY 
      */
     private void checkForHover(int absoluteY) {
-        if(absoluteY >= drawY+vertical_pad && absoluteY <= drawY+(vertical_pad+fieldWidth*numFields)) {
+        if(absoluteY >= drawY+VERTICAL_PAD && absoluteY <= drawY+(VERTICAL_PAD+fieldWidth*numFields)) {
             if(lastSelected != -1) {
                 fields[lastSelected].setSelected(false);
             }
@@ -159,8 +159,8 @@ public class RightClickMenu {
      * if not selecting a field
      */
     private int getSelectedField(int absoluteY) {
-        int index = (absoluteY - drawY - vertical_pad) / fieldHeight;
-        if (index >= fields.length || absoluteY <= (drawY+vertical_pad)) 
+        int index = (absoluteY - drawY - VERTICAL_PAD) / fieldHeight;
+        if (index >= fields.length || absoluteY <= (drawY+VERTICAL_PAD)) 
             return -1;
         return index;
     }
@@ -195,7 +195,7 @@ public class RightClickMenu {
     * @param absoluteY Absolute Y pos of the mouse (yPos - yOffs)
     */
     private void click(int absoluteX, int absoluteY) {
-        if(absoluteY >= drawY+vertical_pad && absoluteY <= drawY+(vertical_pad+fieldWidth*numFields)) {
+        if(absoluteY >= drawY+VERTICAL_PAD && absoluteY <= drawY+(VERTICAL_PAD+fieldWidth*numFields)) {
             int selection = getSelectedField(absoluteY);
             if(selection != -1) {
                 fields[selection].performAction();
@@ -283,12 +283,12 @@ public class RightClickMenu {
         
         public void draw(Graphics g, int xOffs, int yOffs) {
             if(!selected) {
-                g.drawRect(drawX+xOffs, drawY+yOffs + (vertical_pad + (fieldHeight * index)), fieldWidth, fieldHeight);
-                g.drawString(menuTitle, drawX+xOffs + string_draw_offs_x, drawY+yOffs + (string_draw_offs_y + (fieldHeight * index)));
+                g.drawRect(drawX+xOffs, drawY+yOffs + (VERTICAL_PAD + (fieldHeight * index)), fieldWidth, fieldHeight);
+                g.drawString(menuTitle, drawX+xOffs + STRING_DRAW_OFFS_X, drawY+yOffs + (STRING_DRAW_OFFS_Y + (fieldHeight * index)));
             } else {
-                g.fillRect(drawX+xOffs, drawY+yOffs + (vertical_pad + (fieldHeight * index)), fieldWidth, fieldHeight);
+                g.fillRect(drawX+xOffs, drawY+yOffs + (VERTICAL_PAD + (fieldHeight * index)), fieldWidth, fieldHeight);
                 g.setColor(MENU_COLOR);
-                g.drawString(menuTitle, drawX+xOffs + string_draw_offs_x, drawY+yOffs + (string_draw_offs_y + (fieldHeight * index)));
+                g.drawString(menuTitle, drawX+xOffs + STRING_DRAW_OFFS_X, drawY+yOffs + (STRING_DRAW_OFFS_Y + (fieldHeight * index)));
                 g.setColor(MENU_COLOR_BORDER);
             }
         }

@@ -26,13 +26,14 @@ public class SupremeMayor extends JFrame {
     private void init() {
         // Load tiles into RAM
         try {
-            TileSpriteLoader.initTiles();
+            TileLoader.initTiles();
         } catch (IOException e) {
             e.printStackTrace();
         }
         
         // Initializations of static classes
         Actions.initActions();
+        AnimationLoader.initAnimations();
         Construction.init();
         TileIncome.initTileIncome();
         
@@ -49,6 +50,7 @@ public class SupremeMayor extends JFrame {
         
         // JFrame operations
         setTitle(GAME_TITLE + " v" + VERSION);
+        setUndecorated(true);
         setResizable(true);
         setLayout(new BorderLayout());
         add(gp);

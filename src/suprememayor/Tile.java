@@ -18,6 +18,9 @@ class Tile {
     private static WorldManager worldManager = WorldManager.getInstance();
     
     // Instance variables
+    private boolean hasAnimation;
+    private Animation animation;
+    private int animationTick;
     private int tileID;
     private boolean underConstruction;
     private int ticksUntilConstruction;
@@ -31,7 +34,7 @@ class Tile {
     private int tileY; // Used for external reference
     
     public Tile() {
-        tileID = TileSpriteLoader.TILE_GRASS_1;
+        tileID = TileLoader.Tile.GRASS_1.getValue();
         highlightRed = false;
         highlightGreen = false;
         highlightWhite = false;
@@ -41,7 +44,7 @@ class Tile {
     }
 
     public int getTileID() {
-        return tileID;
+        return this.tileID;
     }
 
     public void setTileID(int tileID) {
@@ -54,16 +57,39 @@ class Tile {
         this.tileID = tileID;
     }
     
-    public void setConstructionTo(int tileID) {
-        underConstruction = true;
-        ticksUntilConstruction = Construction.getConstructionTime(tileID);
-        tileIDToConstruct = tileID;
+    public void setHasAnimation(boolean hasAnimation) {
+        this.hasAnimation = hasAnimation;
     }
     
+    public boolean hasAnimation() {
+        return this.hasAnimation;
+    }
+    
+    public void setAnimation(Animation animation) {
+        setHasAnimation(true);
+        this.animation = animation;
+    }
+    
+    public void setConstructionTo(int tileID) {
+        setConstructionTo(tileID, tileID);
+    }
+    
+    /********************
+     * One class to control them all
+     * @param constructionID
+     * @param tileID 
+     */
     public void setConstructionTo(int constructionID, int tileID) {
+        // Deal with construction job
         underConstruction = true;
         ticksUntilConstruction = Construction.getConstructionTime(constructionID);
         tileIDToConstruct = tileID;
+        
+        // Set animation
+        if (Construction.getConstructionTime(constructionID) > 0) {
+            this.setAnimation(new Animation(6,ticksUntilConstruction,AnimationLoader.getAnimation(animationTick)));
+        }
+        
     }
     
     public void setConstructionToRandom(int constructionID) {
@@ -78,9 +104,13 @@ class Tile {
     public void update() {
         if(underConstruction) {
             ticksUntilConstruction--;
+            //if(this.ticksUntilConstruction % 10 == 0) System.out.println("Construction of " + this.tileID + " in " + this.ticksUntilConstruction);
             if(ticksUntilConstruction == 0) {
                 finishConstruction();
             }
+        }
+        if(hasAnimation) {
+            animationTick = (animationTick + 1) % animation.getMaxTicks();
         }
     }
     
@@ -96,14 +126,23 @@ class Tile {
     }
     
     private void finishConstruction() {
+        // Deal with animation
+        hasAnimation = false;
+        animation = null;
+        // Rest of the stuff
         underConstruction = false;
         tileID = tileIDToConstruct;
-        if(tileIDToConstruct == Construction.ROAD_H || tileIDToConstruct == Construction.ROAD_V) {
+        tileIDToConstruct = 0;
+        if(tileID == TileLoader.Tile.ROAD_HORIZONTAL.getValue() || tileID == TileLoader.Tile.ROAD_VERTICAL.getValue()) {
             worldManager.performRoadJunctionCheck(tileX, tileY, tileID);
         }
-        tileIDToConstruct = 0;
         if(TileIncome.generatesMoney(tileID))
             generatingMoney = true;
+    }
+    
+    public boolean isRoadTile() {
+        System.out.println("Checking if tile " + this.tileID + " is a road...");
+        return (this.tileID >= TileLoader.Tile.ROAD_CROSS.getValue() && this.tileID <= TileLoader.Tile.ROAD_TR_BR.getValue());
     }
     
     public void highlightRed() {
@@ -146,28 +185,30 @@ class Tile {
     
     public void draw(Graphics g, int xPos, int yPos) {
                 
-        // DRAWING THE BARE TILE
-        g.drawImage(TileSpriteLoader.getTileSprite(tileID),
-                xPos, yPos,
-                null);
-        
+        if(hasAnimation) {
+            animation.draw(g, xPos, yPos, animationTick);
+        } else {
+            g.drawImage(TileLoader.getTileSprite(tileID),
+                    xPos, yPos,
+                    null);
+        }
         
         // HIGHLIGHTING OPTIONS
         if (highlightWhite) {
-            g.drawImage(TileSpriteLoader.getTileSprite(TileSpriteLoader.TILE_HIGHLIGHT_WHITE), xPos, yPos, null);
+            g.drawImage(TileLoader.getTileSprite(TileLoader.Tile.HIGHLIGHT_WHITE.getValue()), xPos, yPos, null);
         }
         if (highlightBlueWhite) {
-            g.drawImage(TileSpriteLoader.getTileSprite(TileSpriteLoader.TILE_HIGHLIGHT_BLUEWHITE), xPos, yPos, null);
+            g.drawImage(TileLoader.getTileSprite(TileLoader.Tile.HIGHLIGHT_BLUEWHITE.getValue()), xPos, yPos, null);
         }
         if (highlightGreen) {
-            g.drawImage(TileSpriteLoader.getTileSprite(TileSpriteLoader.TILE_HIGHLIGHT_GREEN), xPos, yPos, null);
+            g.drawImage(TileLoader.getTileSprite(TileLoader.Tile.HIGHLIGHT_GREEN.getValue()), xPos, yPos, null);
         }
         else if (highlightRed) {
-            g.drawImage(TileSpriteLoader.getTileSprite(TileSpriteLoader.TILE_HIGHLIGHT_RED), xPos, yPos, null);
+            g.drawImage(TileLoader.getTileSprite(TileLoader.Tile.HIGHLIGHT_RED.getValue()), xPos, yPos, null);
         }
-        if (underConstruction) {
-            g.drawImage(TileSpriteLoader.getTileSprite(TileSpriteLoader.TILE_FLAG_CONSTRUCTION), xPos, yPos, null);
-        }
+        //if (underConstruction) {
+        //    g.drawImage(TileLoader.getTileSprite(TileLoader.Tile.FLAG_CONSTRUCTION.getValue()), xPos, yPos, null);
+        //}
     }
 
     public boolean isBuildable() {
@@ -175,4 +216,5 @@ class Tile {
             return true;
         return false;
     }
+    
 }

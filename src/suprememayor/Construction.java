@@ -6,15 +6,17 @@
 
 package suprememayor;
 
+import java.util.Arrays;
+
 /**
  * @author Julian
  */
 public class Construction {
     
-    public static final int SMALL_BUSINESS = TileSpriteLoader.TILE_SMALL_BUSINESS_1;
-    public static final int SMALL_HOME = TileSpriteLoader.TILE_SMALL_HOME_1;
-    public static final int ROAD_H = TileSpriteLoader.TILE_ROAD_HORIZONTAL;
-    public static final int ROAD_V = TileSpriteLoader.TILE_ROAD_VERTICAL;
+    public static final int SMALL_BUSINESS = TileLoader.Tile.SMALL_BUSINESS_1.getValue();
+    public static final int SMALL_HOME = TileLoader.Tile.SMALL_HOME_1.getValue();
+    public static final int ROAD_H = TileLoader.Tile.ROAD_HORIZONTAL.getValue();
+    public static final int ROAD_V = TileLoader.Tile.ROAD_VERTICAL.getValue();
     
     
     private static int[] constructionTime;
@@ -64,6 +66,7 @@ public class Construction {
      * @return time it takes to construct given constructable
      */
     public static int getConstructionTime(int constructionID) {
+        System.out.println(Arrays.toString(Thread.currentThread().getStackTrace()));
         return constructionTime[constructionID];
     }
     

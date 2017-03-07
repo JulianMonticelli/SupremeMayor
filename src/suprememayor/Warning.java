@@ -14,6 +14,8 @@ import java.awt.Graphics;
  * @author Julian
  */
 public class Warning {
+    public static final int TYPE_WARNING = 0;
+    public static final int TYPE_POSITIVE = 1;
     int ticksTillKilled;
     int ticksSinceDispatch;
     String message;

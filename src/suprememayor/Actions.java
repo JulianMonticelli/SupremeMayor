@@ -54,18 +54,27 @@ public class Actions {
         int[] demolishable = {DEMOLISH};
         
         // Buildable tiles
-        tileActions[TileSpriteLoader.TILE_GRASS_1] = all_allowed;
-        tileActions[TileSpriteLoader.TILE_GRASS_2] = all_allowed;
-        tileActions[TileSpriteLoader.TILE_GRASS_3] = all_allowed;
-        tileActions[TileSpriteLoader.TILE_DIRT_1] = all_allowed;
-        tileActions[TileSpriteLoader.TILE_DIRT_2] = all_allowed;
+        tileActions[TileLoader.Tile.GRASS_1.getValue()] = all_allowed;
+        tileActions[TileLoader.Tile.GRASS_2.getValue()] = all_allowed;
+        tileActions[TileLoader.Tile.GRASS_3.getValue()] = all_allowed;
+        tileActions[TileLoader.Tile.DIRT_1.getValue()] = all_allowed;
+        tileActions[TileLoader.Tile.DIRT_2.getValue()] = all_allowed;
         
         // Building Tiles
-        tileActions[TileSpriteLoader.TILE_SMALL_BUSINESS_1] = demolishable;
-        tileActions[TileSpriteLoader.TILE_SMALL_BUSINESS_2] = demolishable;
+        tileActions[TileLoader.Tile.SMALL_BUSINESS_1.getValue()] = demolishable;
+        tileActions[TileLoader.Tile.SMALL_BUSINESS_2.getValue()] = demolishable;
         
         // Home Tiles
-        tileActions[TileSpriteLoader.TILE_SMALL_HOME_1] = demolishable;
+        tileActions[TileLoader.Tile.SMALL_HOME_1.getValue()] = demolishable;
+        
+        // Road Tiles
+        tileActions[TileLoader.Tile.ROAD_CROSS.getValue()] = demolishable;
+        tileActions[TileLoader.Tile.ROAD_HORIZONTAL.getValue()] = demolishable;
+        tileActions[TileLoader.Tile.ROAD_VERTICAL.getValue()] = demolishable;
+        tileActions[TileLoader.Tile.ROAD_TL_TR.getValue()] = demolishable;
+        tileActions[TileLoader.Tile.ROAD_BL_BR.getValue()] = demolishable;
+        tileActions[TileLoader.Tile.ROAD_TL_BL.getValue()] = demolishable;
+        tileActions[TileLoader.Tile.ROAD_TR_BR.getValue()] = demolishable;
     }
     
     /*******************************************************************
